@@ -1,0 +1,31 @@
+{
+    "name"  : "zer0-framework/throttle",
+    "type"  : "library",
+    "keywords": ["Zer0", "highload"],
+    "homepage": "https://github.com/zer0-framework/throttle",
+    "license" : "GPL-3.0-or-later",
+    "description": "",
+    "authors" : [
+        {
+            "name"      : "Vasily Zorin",
+            "email"     : "kak.serpom.po.yaitsam@gmail.com",
+            "role"      : "Maintainer"
+        }
+    ],
+    "support" : {
+        "email" : "kak.serpom.po.yaitsam@gmail.com",
+        "issues": "https://github.com/zer0-framework/throttle/issues"
+    },
+    "require": {
+        "php": ">=7.2",
+        "ext-igbinary": "*",
+        "zer0-framework/core": "*",
+        "zer0-framework/config": "*",
+        "zer0-framework/redis": "^0.1"
+    },
+    "autoload": {
+        "classmap": ["src/"]
+    },
+    "minimum-stability": "dev",
+    "prefer-stable": true
+}
