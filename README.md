@@ -9,11 +9,6 @@
 ## Пример использования
 
 ```php
-$pool = $this->app->factory('Throttle');
-$user = $pool->item('user.' . $userId)->setCallback(function (Item $item) use ($userId) {
-  $item
-  ->expiresAfter(60 * 60 * 24)
-  ->set(getUserFromDatabase($userId))
-  ->save();
-})->get();
+$throttle = $this->app->factory('Throttle');
+var_dump($throttle->throttle('test', 10, 20, 60));
 ```
