@@ -30,11 +30,6 @@ final class Redis extends Base
     protected $prefix;
 
     /**
-     * @var string
-     */
-    protected $tagPrefix;
-
-    /**
      * @var bool
      */
     protected $saving = false;
@@ -56,10 +51,13 @@ final class Redis extends Base
     public function throttle(string $key, int $max_burst, int $count_per_period, int $period, int $quantity = 1)
     {
         $prefixedKey = $this->prefix . $key;
-        [, $id] = $this->redis->pipeline(function (PipelineInterface $redis) use ($prefixedKey) {
+        $ret = $this->redis->pipeline(function (PipelineInterface $redis) use ($prefixedKey) {
+            $redis->multi();
             $redis->setnx($prefixedKey, base64_encode(microtime()));
             $redis->get($prefixedKey);
+            $redis->exec();
         });
+        $id = $ret[3][1];
         $res = $this->redis->executeRaw(
             ['CL.THROTTLE', $prefixedKey . ':' . $id, $max_burst, $count_per_period, $period, $quantity]
         );
