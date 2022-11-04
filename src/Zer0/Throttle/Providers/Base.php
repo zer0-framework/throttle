@@ -54,4 +54,10 @@ abstract class Base
         int $period,
         int $quantity = 1
     );
+
+    /**
+     * @param $key
+     * @return void
+     */
+    abstract public function reset($key);
 }

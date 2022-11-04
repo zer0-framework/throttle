@@ -49,15 +49,27 @@ final class Redis extends Base
     {
         parent::__construct($config, $app);
         $this->redis = $this->app->broker('Redis')->get($config->redis ?? '');
-        $this->prefix = $config->prefix ?? 'cache:';
-        $this->tagPrefix = $config->tag_prefix ?? $this->prefix . 'tag:';
+        $this->prefix = $config->prefix ?? 'throttle:';
     }
 
     /** @inheritDoc */
     public function throttle(string $key, int $max_burst, int $count_per_period, int $period, int $quantity = 1)
     {
-        $res = $this->redis->executeRaw(['CL.THROTTLE', $key, $max_burst, $count_per_period, $period, $quantity]);
+        $prefixedKey = $this->prefix . $key;
+        [, $id] = $this->redis->pipeline(function (PipelineInterface $redis) use ($prefixedKey) {
+            $redis->setnx($prefixedKey, base64_encode(microtime()));
+            $redis->get($prefixedKey);
+        });
+        $res = $this->redis->executeRaw(
+            ['CL.THROTTLE', $prefixedKey . ':' . $id, $max_burst, $count_per_period, $period, $quantity]
+        );
 
         return new Result($res[0] === 0, $res[1], $res[2], $res[3], $res[4]);
+    }
+
+    /** @inheritDoc */
+    public function reset($key)
+    {
+        $this->redis->del($this->prefix . $key);
     }
 }
