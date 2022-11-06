@@ -8,6 +8,7 @@ use Zer0\Cache\Traits\Hash;
 use Zer0\Cache\Traits\Serialization;
 use Zer0\Config\Interfaces\ConfigInterface;
 use Zer0\Cache\Exceptions\QueryFailedException;
+use Zer0\Throttle\Result;
 
 /**
  * Class Base
@@ -45,7 +46,7 @@ abstract class Base
      * @param null $hasValue
      *
      * @throws QueryFailedException
-     * @return mixed|null
+     * @return Result
      */
     abstract public function throttle(
         string $key,
@@ -53,7 +54,7 @@ abstract class Base
         int $count_per_period,
         int $period,
         int $quantity = 1
-    );
+    ): Result;
 
     /**
      * @param $key

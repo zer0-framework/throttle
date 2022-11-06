@@ -39,7 +39,7 @@ final class ExtRedis extends Base
     }
 
     /** @inheritDoc */
-    public function throttle(string $key, int $max_burst, int $count_per_period, int $period, int $quantity = 1)
+    public function throttle(string $key, int $max_burst, int $count_per_period, int $period, int $quantity = 1): Result
     {
         $prefixedKey = $this->prefix . $key;
         [, $id] = $redis->multi()
